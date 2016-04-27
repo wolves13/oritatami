@@ -1,0 +1,78 @@
+﻿var init_word = function() {
+    var i;
+  
+    OSVars.word[0] = 1;
+    OSVars.word[1] = 1;
+    OSVars.word[2] = 1;
+
+    for(i=0; i<50 ; i++){
+	OSVars.word[i+3] = i;  
+    }
+    // OSVars.cons.lenをここで設定したい.
+    OSVars.cons.len = OSVars.word.length;
+};
+
+
+
+
+    // テスト用ルールセット<20151124-A>
+    OSVars.ruleset[5][7]  = true; 
+    OSVars.ruleset[7][5]  = true; 
+
+    OSVars.ruleset[0][9]  = true; 
+    OSVars.ruleset[9][0]  = true; 
+    
+    OSVars.ruleset[1][9]  = true; 
+    OSVars.ruleset[9][1]  = true; 
+
+    OSVars.ruleset[2][9]  = true; 
+    OSVars.ruleset[9][2]  = true; 
+
+    OSVars.ruleset[7][9]  = true; 
+    OSVars.ruleset[9][7]  = true; 
+
+    OSVars.ruleset[2][8]  = true; 
+    OSVars.ruleset[8][2]  = true; 
+
+
+
+
+
+OSVars.occupied[10][13] = { beadType: 1, index : 0, bondNum : 0 };
+OSVars.occupied[10][12] = { beadType: 1, index : 1, bondNum : 0 };
+OSVars.occupied[11][12] = { beadType: 1, index : 2, bondNum : 0 };
+
+OSVars.occupied[11][11] = { beadType: 0, index : 3, bondNum : 0 };
+OSVars.occupied[11][10] = { beadType: 1, index : 4, bondNum : 0 };
+OSVars.occupied[12][10] = { beadType: 2, index : 5, bondNum : 0 };
+OSVars.occupied[13][10] = { beadType: 3, index : 6, bondNum : 0 };
+OSVars.occupied[14][10] = { beadType: 4, index : 7, bondNum : 0 };
+OSVars.occupied[15][10] = { beadType: 5, index : 8, bondNum : 0 };
+OSVars.occupied[15][11] = { beadType: 6, index : 9, bondNum : 0 };
+
+
+// テスト用の点を追加
+// OSVars.occupied[13][10] = { beadType: 20, index : 60, bondNum : 0 };
+
+
+show_occupied_in_binary_2();
+br2();
+
+OSVars.w_path = [
+
+    {x: 10, y: 13}, 
+    {x: 10, y: 12},
+    {x: 11, y: 12},
+
+    {x: 11, y: 11},
+    {x: 11, y: 10},
+    {x: 12, y: 10},
+    {x: 13, y: 10},
+    {x: 14, y: 10},
+    {x: 15, y: 10},
+    {x: 15, y: 11}
+];
+
+
+// seedとの境目がここで決まる.
+OSVars.step = 10;

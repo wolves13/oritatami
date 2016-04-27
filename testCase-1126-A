@@ -1,0 +1,63 @@
+﻿    // テストケース<1126-A>
+    OSVars.ruleset[1][9]  = true; 
+    OSVars.ruleset[9][1]  = true; 
+
+    OSVars.ruleset[1][11]  = true; 
+    OSVars.ruleset[11][1]  = true; 
+
+    OSVars.ruleset[1][12]  = true; 
+    OSVars.ruleset[12][1]  = true; 
+
+    OSVars.ruleset[1][13]  = true; 
+    OSVars.ruleset[13][1]  = true; 
+
+    OSVars.ruleset[2][9]  = true; 
+    OSVars.ruleset[9][2]  = true; 
+
+    OSVars.ruleset[11][9]  = true; 
+    OSVars.ruleset[9][11]  = true; 
+
+    OSVars.ruleset[11][40]  = true; 
+    OSVars.ruleset[40][11]  = true; 
+
+
+
+
+// occupied配列の初期設定(seed)
+OSVars.occupied[15][14] = { beadType: 0, index : 0, bondNum : 0 };
+OSVars.occupied[14][14] = { beadType: 1, index : 1, bondNum : 0 };
+
+OSVars.occupied[14][13] = { beadType: 2, index : 2, bondNum : 0 };
+OSVars.occupied[14][12] = { beadType: 3, index : 3, bondNum : 0 };
+OSVars.occupied[14][11] = { beadType: 4, index : 4, bondNum : 0 };
+
+OSVars.occupied[13][11] = { beadType: 5, index : 5, bondNum : 0 };
+OSVars.occupied[12][11] = { beadType: 6, index : 6, bondNum : 0 };
+OSVars.occupied[11][11] = { beadType: 7, index : 7, bondNum : 0 };
+
+OSVars.occupied[12][12] = { beadType: 8, index : 8, bondNum : 0 };
+
+// tuika
+OSVars.occupied[12][14] = { beadType: 40, index : -1, bondNum : 0 };
+
+
+/////////////////
+
+OSVars.w_path = [
+    {x: 15, y: 14},
+    {x: 14, y: 14},
+
+    {x: 14, y: 13},
+    {x: 14, y: 12}, 
+    {x: 14, y: 11},
+
+    {x: 13, y: 11},
+    {x: 12, y: 11},
+    {x: 11, y: 11},
+
+    {x: 12, y: 12},
+];
+
+
+// seedとの境目がここで決まる.
+OSVars.step = 9;

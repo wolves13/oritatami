@@ -1,0 +1,381 @@
+﻿// <os.js>
+// Similator of 2D Oritatami System.
+// 
+// 
+
+//////////
+// Grobal な 値の定義
+INITIAL_GRID_SIZE_X = 32;
+INITIAL_GRID_SIZE_Y = 32;
+
+var adjacents = [ {x: 1, y: 0}, {x: -1, y: 0},
+		  {x: 0, y: 1}, {x: 0,  y: -1},
+		  {x: 1, y: 1}, {x: -1, y: -1} ];
+
+// Oritataim System が持つべき変数群を収める名前空間.
+var OSVars = {
+    cons : {
+	     alpha : 2,    // alpha, deltaはこの値を上書きする.
+             delta : 3,
+             len   : 15    // 高分子鎖の長さ.(seedは？)
+    },
+
+    mode : { 
+	indexEqualBeadtype : false
+    },
+
+    word   :   [ ],    // 高分子の鎖を順にならべたリスト.
+    w_path :   [ ],    // 高分子の鎖が辿った点のリスト
+
+    ruleset :  [],     // 高分子種どうしが水素結合を結べるかどうか定める. 2dMatrix.
+
+    occupied : [],     // 点の占有情報. [(高分子種,index,hbond数)/false] を２次元配列で保存.
+                       
+
+    oc_size  : { x: INITIAL_GRID_SIZE_X, 
+		 y: INITIAL_GRID_SIZE_Y },   // occupied配列の[縦/横]幅
+
+    bond_num :   [],   // 各高分子が結んでいるhbondの数
+    hbonds   :   [],   // 実際に形成されたhbondの情報 [pi,pj] (i != j) をもつ
+
+    step :   0         // 最適化ステップの段階.1ずつ増える.
+                       // 現在, indexいくつの高分子位置を最適化しているかを表す.
+
+};
+//
+//////////
+
+///// 処理 //////////
+//
+
+
+
+// seedの情報を, occupied配列, bond_num, w_path, word, 
+// などに反映する.
+// reflect_seed_to_vars();
+
+
+
+
+
+//////////////////////////////
+// 以下, occupiedの実装方法の比較 のためコード
+//////////////////////////////////////
+
+/*
+
+// 適当に値を設定
+var i;
+for(i=0; i < 4 ; i++){
+  OSVars.occupied[1][i] = true; // x=0: 11110000000;
+}
+for(i=0 ; i < 10; i++){
+  OSVars.occupied[16][i+16] = true;
+}
+
+
+// 普通に10回アクセスを20回
+var num=20;
+while( num ) {
+  
+  for(i=0; i < 10 ; i++){
+    result = is_occupied(16, i+16);
+  }
+  num--;
+}
+document.writeln( '<br>' );
+
+
+// (10,32)にアクセスしてY軸方向拡大させる
+is_occupied(10,32,true);
+
+// (32,10)にアクセスしてX軸方向拡大させる
+is_occupied(32,10,true);
+
+// (33,5)にアクセス(拡大は起こらない)
+is_occupied(33,5,true);
+
+
+var result;
+// (10, 100)にアクセスする. 現在の占有箇所の遠くを参照しているため, 
+// 拡大は起こらないはず.
+result = is_occupied(10, 100, true);
+document.writeln('result(10,100) : ' + result + '<br>');
+
+// (100, 10)にアクセスする. 現在の占有箇所の遠くを参照しているため, 
+// 拡大は起こらないはず.
+result = is_occupied(100, 10, true);
+document.writeln('result(100,10) : ' + result + '<br>');
+
+*/
+
+/// occupiedの実装方法の比較こーどおわり
+////////////////////////////////////
+
+
+////////////////////////////////////////////////////////
+// 再帰的に呼び出す folding() をテストするケースをつくろう.
+//
+// <テストケース1104> ( 1方向にしか進めないとき )
+/*
+
+
+initWord();   // 高分子鎖の系列を初期化.
+init_occupied( INITIAL_GRID_SIZE_X, INITIAL_GRID_SIZE_Y ); // occupied配列を初期化.
+
+set_ruleset();   // ルールセット読み込み (まだ直接設定しかしていないが)
+show_ruleset();
+
+br2();
+
+
+OSVars.occupied[0][1] = true;
+OSVars.occupied[1][1] = true;
+OSVars.occupied[1][0] = true;
+OSVars.occupied[2][1] = true;
+OSVars.occupied[2][2] = true
+
+var i;
+for(i=1; i <= 5; i++){
+    OSVars.occupied[i][i+1] = true;  
+}
+for(i=2; i <= 5; i++){
+    OSVars.occupied[i+1][i] = true;  
+}
+
+show_occupied_in_binary_2();
+
+document.writeln('<br><br>');
+document.writeln( OSVars.oc_size.x + ', ' +  OSVars.oc_size.y);
+document.writeln('<br><br>');
+
+OSVars.w_path = [ {x: 0, y: 1}, {x: 1, y: 1},
+		  {x: 1, y: 0}, {x: 2, y: 1},
+		  {x: 2, y: 2}
+		];
+
+// いくつめの高分子を最適化することから始めるかを指定.
+OSVars.step = OSVars.w_path.length;
+
+document.writeln( OSVars.step );   br1();
+document.writeln( OSVars.w_path.length );   br1();
+
+runSimu();
+*/
+
+
+//////////////////////
+//<テストケース1104-2>
+//( Gridの拡張を伴う, pathの列挙 )
+/*
+initWord();   // 高分子鎖の系列を初期化.
+init_occupied( INITIAL_GRID_SIZE_X, INITIAL_GRID_SIZE_Y ); // occupied配列を初期化.
+
+set_ruleset();   // ルールセット読み込み (まだ直接設定しかしていないが)
+show_ruleset();
+
+br2();
+
+
+OSVars.occupied[24][30] = 7;
+OSVars.occupied[25][30] = 1;
+OSVars.occupied[26][30] = 2;
+
+var i;
+for(i=24; i <= 28; i++){
+    OSVars.occupied[i][29] = 3;  
+}
+for(i=29; i <= 30; i++){
+    OSVars.occupied[i][i+1] = 4;  
+}
+OSVars.occupied[26][31] = 5;  
+OSVars.occupied[27][31] = 6;
+
+
+show_occupied_in_binary_2();
+
+document.writeln('<br><br>');
+document.writeln( OSVars.oc_size.x + ', ' +  OSVars.oc_size.y);
+document.writeln('<br><br>');
+
+OSVars.w_path = [ {x: 24, y: 30}, {x: 25, y: 30},
+		  {x: 26, y: 30}
+		];
+
+// いくつめの高分子を最適化することから始めるかを指定.
+// seedを設定する所でやりたい.ほんとは.
+OSVars.step = OSVars.w_path.length;
+
+runSimu();
+
+
+br2();
+show_occupied_in_binary_2();
+
+*/
+
+
+///////////////
+//<テストケース 1105>
+// 分かりやすい図示.
+// 1通りしかあり得ないパスを作る
+/*
+
+initWord();   // 高分子鎖の系列を初期化.
+init_occupied( INITIAL_GRID_SIZE_X, INITIAL_GRID_SIZE_Y ); // occupied配列を初期化.
+
+set_ruleset();
+
+br2();
+
+
+OSVars.occupied[1][3] = { 
+                          index    : 1,
+			  beadType : 2,
+			  bondNum : 0
+			 };
+
+var i;
+for(i=1; i <= 28; i++){
+    OSVars.occupied[i][2] = {
+                              index     : i+1,
+                              beadType  : 3,
+                              bondNum  : 0
+                            };
+}
+for(i=2; i <= 26; i++){
+    OSVars.occupied[i][4] = {
+                              index     : i+28,
+                              beadType  : 4,
+                              bondNum  : 0
+                            };
+}
+for(i=3; i <= 16; i++){
+    OSVars.occupied[28][i] = {
+                              index     : i+45,
+                              beadType  : 5,
+                              bondNum  : 0
+                            };
+}
+for(i=5; i <= 15; i++){
+    OSVars.occupied[26][i] = {
+                              index     : i+59,
+                              beadType  : 6,
+                              bondNum  : 0
+                            };
+
+}
+
+
+// show_occupied_in_index(); がほしい
+
+
+
+document.writeln('<br><br>');
+
+show_occupied_in_elm();
+
+document.writeln( OSVars.oc_size.x + ', ' +  OSVars.oc_size.y);
+document.writeln('<br><br>');
+
+OSVars.w_path = [ {x: 2, y: 3}, {x: 3, y: 3}
+		];
+
+OSVars.occupied[2][3] = { index : 0, beadType : 1, bondNum : 0};
+OSVars.occupied[3][3] = { index : 0, beadType : 1, bondNum : 0};
+
+
+// 角でnondeterministicにならない為のoccupied
+OSVars.occupied[27][3] = { index : 0, beadType : 3, bondNum : 0};
+
+
+// いくつめの高分子を最適化することから始めるかを指定.
+// seedを設定する所でやりたい.ほんとは.
+OSVars.step = OSVars.w_path.length;
+
+runSimu();
+
+
+br2();
+show_occupied_in_binary_2();
+*/
+
+
+initWord();
+initOccupied( INITIAL_GRID_SIZE_X, INITIAL_GRID_SIZE_Y );
+setRuleset();
+
+
+// occupied配列の初期設定(seed)
+OSVars.occupied[30][31] = { beadType: 0, index : 0, bondNum : 0 };
+OSVars.occupied[30][30] = { beadType: 1, index : 1, bondNum : 0 };
+OSVars.occupied[29][29] = { beadType: 2, index : 2, bondNum : 0 };
+
+OSVars.occupied[30][29] = { beadType: 3, index : 3, bondNum : 0 };
+OSVars.occupied[31][30] = { beadType: 4, index : 4, bondNum : 0 };
+OSVars.occupied[31][31] = { beadType: 5, index : 5, bondNum : 0 };
+
+
+// tuika
+// OSVars.occupied[12][14] = { beadType: 40, index : -1, bondNum : 0 };
+
+
+
+show_occupied_in_binary_2();
+br2();
+
+OSVars.w_path = [
+
+    {x: 30, y: 31},
+    {x: 30, y: 30},
+    {x: 29, y: 29},
+
+    {x: 30, y: 29},
+    {x: 31, y: 30},
+    {x: 31, y: 31}
+];
+
+
+// seedとの境目がここで決まる.
+OSVars.step = 6;
+
+
+// 実行時間を計測しつつ, OSを走らせる.
+console.time('timer');
+runSimu();
+console.timeEnd('timer');
+
+
+br2();
+show_occupied_in_binary_2();
+br2();
+
+
+document.writeln('len: ' + OSVars.cons.len); br2();
+
+// occupied内の全情報の出力
+
+document.writeln('step: ' + OSVars.step); br2();
+
+for(i=0 ; i<OSVars.step  ; i++){
+    var p = OSVars.w_path[ i ];
+    var bead = OSVars.occupied[p.x][p.y]
+
+    document.writeln('occupied[' + p.x + '][' + p.y + '] == ');
+    document.writeln( 'beadType : ' + bead.beadType ); 
+    document.writeln( '__ index : ' + bead.index ); 
+    document.writeln( '__ bondNum : ' + bead.bondNum ); 
+
+    br1();
+}
+
+br2();
+
+var bonds = OSVars.hbonds;
+document.writeln('---------- Hbonds list ----------'); br1();
+for(i=0; i < bonds.length; i++){
+    document.writeln( '[' + bonds[i][0].x + ']' + '[' +  bonds[i][0].y +']');
+    document.writeln( ' << --- >> ' );
+    document.writeln( '[' + bonds[i][1].x + ']' + '[' +  bonds[i][1].y +']');
+    br1();
+}

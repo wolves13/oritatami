@@ -1,0 +1,295 @@
+/*
+  Canvas上での描画に関する関数をまとめる.
+  <canvasControl.js>
+*/
+
+/*  グローバル変数定義  */
+
+UNIT_DIST_X = 30;
+UNIT_DIST_Y = 30;
+
+CIRCLE_RADIUS = 9.5  // 6, 6.5, 7 are suitable...?
+ANGLE_IN_OCS = Math.PI / 6;
+
+TEST = 0;
+
+// sleep関数
+var sleep = function( t ){
+    
+    var d1  = new Date().getTime();
+    var d2  = new Date().getTime();
+
+    while( d2 < d1 + 1000*t ){
+	d2 = new Date().getTime();
+    }
+    return;
+}
+
+// xy 直交座標の描画(とりあえず)
+var drawGrid = function(context, color, stepx, stepy, gridOrigin) {
+
+    context.save();
+
+    context.strokeStyle = color;
+    context.lineWidth = 0.5;   // 1ピクセル分の線を描画するとき,
+    // 0.5を指定するといい感じになる.
+    
+    /*
+    var orgX =  gridOrigin.x;
+    var orgY =  gridOrigin.y;    */
+    var i;
+    for ( i = stepx ; i < context.canvas.width + (stepx * 10); i += stepx ) {
+	context.beginPath();
+	context.moveTo(i, 0);
+	context.lineTo(i, context.canvas.height);
+	context.stroke();
+    }
+
+    for ( i = stepy ; i < context.canvas.height; i += stepy ) {
+	context.beginPath();
+	context.moveTo(0, i);
+	context.lineTo(context.canvas.width + (stepy * 10), i);
+	context.stroke();
+    }
+
+    context.restore();
+};
+
+// 斜交座標上の (x,y) をcanvas上の点の座標に変換する.
+// OCS( oblique coordinate system )
+var getPointOnOCS = function (x, y) {
+    
+    var angle = ANGLE_IN_OCS;
+    
+    return {
+	x : (x * UNIT_DIST_X)  -  (y * UNIT_DIST_Y) * Math.sin( angle ),
+	y : (y * UNIT_DIST_Y)
+    };
+};
+
+var drawBeadCircle = function(x, y, context, color) {
+    context.save();
+
+    var centerP = getPointOnOCS(x, y);
+    context.strokeStyle =  color ? color : 'black' ;
+    context.beginPath();
+    context.arc(centerP.x, centerP.y, CIRCLE_RADIUS, 0, Math.PI*2 );
+    context.stroke();
+
+    context.restore();
+};
+
+// 円の半径と, UNIT_DISTANCEの値から計算した値を変数にしたほうがよい.(あとで)
+var drawChain = function(pA, pB, context, color) {
+    context.save();
+    
+    var p1, p2;
+    var p;
+    context.strokeStyle = color ?  color : 'black';
+    context.beginPath();
+    
+    p1 = getPointOnOCS(pA.x, pA.y);
+    p2 = getPointOnOCS(pB.x, pB.y);
+
+    p = { x: (p1.x * 7 + p2.x * 18)/25  , y :  (p1.y * 7 + p2.y * 18)/25 };
+    context.moveTo(p.x, p.y);
+
+    p = { x: (p1.x * 18 + p2.x * 7)/25  , y :  (p1.y * 18 + p2.y * 7)/25 };
+    context.lineTo(p.x, p.y);
+    
+    context.stroke();
+    context.restore();
+};
+
+var drawBeadType = function(x, y, beadType, context, color){
+    context.save();
+    var text = beadType.toString();
+    var centerP = getPointOnOCS(x, y);
+
+    context.font = '4px century';               // ここでbeadType のfontを決定してる.
+    context.textBaseline = 'middle';    
+    context.textAlign = 'center';
+    context.fillStyle = color ? color : 'black';
+
+    context.fillText(text, centerP.x, centerP.y);
+    context.restore();
+};
+
+var drawHbond  = function(pA, pB, context, color) {
+    context.save();
+
+    var pp1, pp2;
+    var p1 = getPointOnOCS(pA.x, pA.y);
+    var p2 = getPointOnOCS(pB.x, pB.y);
+
+    pp1 = { x : (p1.x * 5 + p2.x * 3) / 8,
+	    y : (p1.y * 5 + p2.y * 3) / 8
+	  };
+
+    pp2 = { x:  (p1.x * 3 + p2.x * 5) / 8,
+	    y:  (p1.y * 3 + p2.y * 5) / 8 
+	  };
+    
+    context.strokeStyle = color ? color : 'orange';
+    context.beginPath();
+    context.moveTo( pp1.x, pp1.y );
+    context.lineTo( pp2.x, pp2.y );
+    context.lineWidth = 2.0;
+    context.stroke();
+    context.restore();
+    return;
+};
+
+// 既に固定されたPathのみ, 高分子鎖を描画
+// 最終構造のみをアニメーションするときに使っている.
+var reflectFixedPath = function( ) {
+    
+    var overCtx = document.getElementById('overCanvas').getContext('2d');
+    var i;
+    var p, bead;
+    var initialStep = OSVars.initialStep;
+
+    for( i = initialStep ; i < OSVars.step ; i++ ){
+	p = OSVars.w_path[ i ];
+	bead = OSVars.occupied[p.x][p.y];
+	drawBeadCircle(p.x, p.y, overCtx);
+	drawBeadType(p.x, p.y, OSVars.word[i], overCtx);
+	if ( i !== 0 ) {
+	    var previous = OSVars.w_path[i-1];
+	    drawChain( previous, p, overCtx);
+	}
+    }
+};
+
+var reflectFixedHbond = function() {
+    var overCtx = document.getElementById('overCanvas').getContext('2d');
+    var hbonds = OSVars.hbonds;
+    var p1, p2, i;
+
+    for(i=0; i < hbonds.length ; i++){
+	p1 = { x: hbonds[i][0].x, y: hbonds[i][0].y };
+	p2 = { x: hbonds[i][1].x, y: hbonds[i][1].y };
+	
+	drawHbond(p1, p2, overCtx);
+    }
+};
+
+
+// formの, changeRoute ボタンを押したときに呼ばれる.
+// non-deterministicなときに, 折り方1つ切り替えて描画
+// 関数オブジェクトを返す.
+var reflectNonDetRoute = function () {
+    var overCtx = document.getElementById('overCanvas').getContext('2d');
+    var word = OSVars.word; 
+    var step = OSVars.step;
+    var d = OSVars.cons.delta;
+    var idx = 0;                                      // クロージャで毎回ここが変化する.
+    var img = overCtx.getImageData(0, 0, 1000, 600);
+    
+    var fragColor = 'blue';  // 暫定色だけどよさげ
+    var bondColor = 'purple';
+
+    var nextRoute = function () {
+
+	// canvas状態の復元
+	overCtx.putImageData(img, 0, 0);
+
+	var j;
+	var p, previous;
+	var i = idx;
+	// Circle, Bead, Chainを描画
+	for( j=0 ; j < nonDetRoutes[i].length ; j++ ){
+	    p = nonDetRoutes[i][j];
+	    drawBeadCircle(p.x, p.y, overCtx, fragColor);
+	    drawBeadType(p.x, p.y, word[step + j], overCtx, fragColor); 
+	    if ( j !== 0) {
+		previous = nonDetRoutes[i][j-1];
+	    }else{
+		previous = OSVars.w_path[ step - 1 ];
+	    }
+	    drawChain(previous, p, overCtx, fragColor);
+	}
+	// Hbondを描画
+	for(j=0 ; j < nonDetHbonds[i].length ; j++) {
+	    drawHbond( nonDetHbonds[i][j].frag, nonDetHbonds[i][j].opposite, overCtx, bondColor);
+	}
+
+	if( idx < nonDetRoutes.length - 1 ){
+	    idx += 1;
+	}else{
+	    idx = 0;
+	}
+    };
+
+    return nextRoute;
+};
+
+
+// 最適化の際, Routeを1つ決定する度に描画の為に呼ばれる.
+// 
+var reflectTmpRoute = function ( route, img ) {
+    var overCtx = document.getElementById('overCanvas').getContext('2d');
+    var word = OSVars.word; 
+    var step = OSVars.step;
+    var d = OSVars.cons.delta;
+    var i, p;
+
+    for(i=0; i < route.length ; i++){
+	p = route[i];
+	drawBeadCircle(p.x, p.y, overCtx, 'blue');
+	drawBeadType(p.x, p.y, word[step+i], overCtx, 'blue');
+	
+	if( i !== 0 ){
+	    previous = route[i-1];
+	}
+	else{
+	    previous = OSVars.w_path[ step - 1 ];
+	}
+	drawChain(previous, p, overCtx, 'blue');
+    }
+};
+
+
+// 座標システムを, 斜交座標のものに変換する.
+var changeToOCS = function( context ) {
+
+    // cは, transform()に与える引数.
+    // x' = (a*x) + (c*y) + e の中の 'c'.
+    var c =  - Math.sin( ANGLE_IN_OCS );
+
+    context.transform(1, 0, c, 1, 0, 0);
+};
+
+//////////
+// 処理
+var gridCanvas =  document.getElementById('gridCanvas');
+var gridContext = gridCanvas.getContext('2d');
+var overCanvas =  document.getElementById('overCanvas');
+var overContext =  overCanvas.getContext('2d');
+
+changeToOCS( gridContext );  // gridContextを斜交座標システムへ変換
+drawGrid(gridContext, 'lightgray', UNIT_DIST_X, UNIT_DIST_Y );
+
+
+/* 軸ラベルの描画 */
+  // 座標最大値の計算
+var sizeX =  ( gridContext.canvas.width / UNIT_DIST_X );
+var sizeY =  ( gridContext.canvas.height / UNIT_DIST_Y );
+console.log('sizeX : ' + sizeX);
+console.log('sizeY : ' + sizeY);
+
+var textX;
+var i;
+gridContext.textBaseline = 'top';
+gridContext.textAlign = 'center';
+
+for(i = 1 ; i <= sizeX ; i++ ) {
+    textX = i.toString();
+    gridContext.strokeText(textX, i * UNIT_DIST_X, UNIT_DIST_Y/5);
+}
+
+gridContext.textBaseline = 'middle';
+for(i = 1 ; i <= sizeY ; i++ ) {
+    textY = i.toString();
+    gridContext.strokeText(textY, (UNIT_DIST_X * Math.sin(ANGLE_IN_OCS) ) * i + UNIT_DIST_X/3, UNIT_DIST_Y * i);
+}

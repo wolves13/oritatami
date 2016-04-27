@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head>  <title>Oritatami Simulator with Canvas</title>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<style>
+  
+  * {
+    font-size: 8pt;
+  }
+
+  #canvas {
+    margin: 50px;
+    background: -webkit-gradient(linear, left top, left bottom,
+                                 from(#666666), to(#aaaaaa)    );
+  }
+
+</style>
+
+</head>
+<body >
+  <script type="text/javascript" src="basic_funcs.js"></script>  
+  <script type="text/javascript" src="os.js"></script>
+  <noscript>JavaScriptが利用できません。</noscript>
+  <canvas id="canvas" width="600" height="300"></canvas>
+</body></html>

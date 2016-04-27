@@ -1,0 +1,14 @@
+///
+/*
+  Workerオブジェクトを使うテスト.
+  <workerTest.js>
+*/
+///
+
+
+
+onmessage = function (event) {
+    var val = event.data;
+    console.log( val );
+    postMessage( val + val );
+};

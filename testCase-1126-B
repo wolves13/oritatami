@@ -1,0 +1,81 @@
+﻿    // テストケース<1126-B>
+    OSVars.ruleset[0][17]  = true; 
+    OSVars.ruleset[17][0]  = true; 
+
+    OSVars.ruleset[0][19]  = true; 
+    OSVars.ruleset[19][0]  = true; 
+
+    OSVars.ruleset[0][20]  = true; 
+    OSVars.ruleset[20][0]  = true; 
+
+    OSVars.ruleset[0][21]  = true; 
+    OSVars.ruleset[21][0]  = true; 
+
+    OSVars.ruleset[1][17]  = true; 
+    OSVars.ruleset[17][1]  = true; 
+
+    OSVars.ruleset[1][21]  = true; 
+    OSVars.ruleset[21][1]  = true; 
+
+    OSVars.ruleset[2][21]  = true; 
+    OSVars.ruleset[21][2]  = true; 
+
+    OSVars.ruleset[13][17]  = true; 
+    OSVars.ruleset[17][13]  = true; 
+
+    OSVars.ruleset[13][18]  = true; 
+    OSVars.ruleset[18][13]  = true;     
+
+
+
+// occupied配列の初期設定(seed)
+OSVars.occupied[12][12] = { beadType: 0, index : 0, bondNum : 0 };
+OSVars.occupied[11][12] = { beadType: 1, index : 1, bondNum : 1 };
+OSVars.occupied[10][11] = { beadType: 2, index : 2, bondNum : 0 };
+
+OSVars.occupied[10][12] = { beadType: 3, index : 3, bondNum : 0 };
+OSVars.occupied[10][13] = { beadType: 4, index : 4, bondNum : 0 };
+OSVars.occupied[10][14] = { beadType: 5, index : 5, bondNum : 0 };
+OSVars.occupied[10][15] = { beadType: 6, index : 6, bondNum : 0 };
+
+OSVars.occupied[11][16] = { beadType: 7, index : 7, bondNum : 0 };
+OSVars.occupied[12][16] = { beadType: 8, index : 8, bondNum : 0 };
+OSVars.occupied[13][16] = { beadType: 9, index : 9, bondNum : 0 };
+
+OSVars.occupied[14][17] = { beadType: 10, index : 10, bondNum : 0 };
+OSVars.occupied[14][16] = { beadType: 11, index : 11, bondNum : 0 };
+OSVars.occupied[14][15] = { beadType: 12, index : 12, bondNum : 0 };
+
+OSVars.occupied[13][14] = { beadType: 13, index : 13, bondNum : 0 };
+OSVars.occupied[13][15] = { beadType: 14, index : 14, bondNum : 0 };
+
+OSVars.occupied[12][15] = { beadType: 15, index : 15, bondNum : 0 };
+OSVars.occupied[12][14] = { beadType: 16, index : 16, bondNum : 0 };
+
+OSVars.w_path = [
+
+    {x: 12, y: 12},
+    {x: 11, y: 12},
+    {x: 10, y: 11},
+
+    {x: 10, y: 12},
+    {x: 10, y: 13},
+    {x: 10, y: 14},
+    {x: 10, y: 15},
+
+    {x: 11, y: 16},
+    {x: 12, y: 16},
+    {x: 13, y: 16},
+
+    {x: 14, y: 17},
+    {x: 14, y: 16},
+    {x: 14, y: 15},
+
+    {x: 13, y: 14},
+    {x: 13, y: 15},
+
+    {x: 12, y: 15},
+    {x: 12, y: 14}
+];
+
+

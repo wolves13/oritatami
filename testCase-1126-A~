@@ -1,0 +1,25 @@
+﻿    // テストケース<1126-A>
+    OSVars.ruleset[1][9]  = true; 
+    OSVars.ruleset[9][1]  = true; 
+
+    OSVars.ruleset[1][11]  = true; 
+    OSVars.ruleset[11][1]  = true; 
+
+    OSVars.ruleset[1][12]  = true; 
+    OSVars.ruleset[12][1]  = true; 
+
+    OSVars.ruleset[1][13]  = true; 
+    OSVars.ruleset[13][1]  = true; 
+
+    OSVars.ruleset[2][9]  = true; 
+    OSVars.ruleset[9][2]  = true; 
+
+    OSVars.ruleset[11][9]  = true; 
+    OSVars.ruleset[9][11]  = true; 
+
+    OSVars.ruleset[11][40]  = true; 
+    OSVars.ruleset[40][11]  = true; 
+
+
+
+

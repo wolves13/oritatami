@@ -1,0 +1,95 @@
+﻿////////////////
+//<closure.js>//
+
+// クロージャをいろいろ試す.
+// Good Parts の本とかを参考にしようかな.
+
+// test.html などの
+// <script>要素の src属性に指定してテストする.
+
+//////////
+//     ///
+//////////
+//     ///
+//////////
+
+// String.concat() を順次実行すて返すクロージャ.
+var maker = function(){
+
+  var saying = '';
+
+  return function(){
+     saying = saying.concat('Nyan');
+     return document.writeln( saying );;    
+  };
+};
+/*
+var c = maker();  var i=0;
+while( i < 20){
+  c();
+  document.writeln('<br>');
+  i++;
+}
+*/
+
+// 再帰関数の練習( ピラミッド状に文字列を繰り返すだけ　)
+var saying = 'Nyan' ;
+var pyramidNyan = function(n){
+
+  if( n == undefined ){ document.writeln('error!!');  return; }
+
+  document.writeln( saying + '<br>');
+  if(n == 0){ 
+   saying = saying.substr( 'Nyan'.length );
+   return ; 
+  }
+  arguments.callee(n-1);
+
+  saying = saying.substr( 'Nyan'.length );
+  document.writeln( saying + '<br>');
+};
+
+// pyramidNyan(20);
+
+
+////
+// クロージャのサンプル1.
+// オブジェクトリテラルで, 2つの関数を返す
+var myClosure = function(){
+  var value = 0;
+ 
+  // returnの直後に'{' を置くの, すごい重要 !!!
+  return {
+      increment: function(inc){
+          value += typeof inc === 'number' ? inc : 1;
+      },
+      getValue: function() {
+          return value;
+      }
+  };
+
+}();
+/*
+document.writeln( myClosure.getValue() );   // => 0
+myClosure.increment(2);
+document.writeln( myClosure.getValue() );   // => 2
+*/
+
+
+// クロージャのサンプルその2.
+// 関数内で 'var ....'のように宣言した変数だけでなく,
+// 関数呼び出しの際の仮引数 ( ここでは status )にもアクセスできる.
+var yourClosure = function( status ) {
+  return {
+      get_status: function () {
+          return status;
+      }
+  };
+};
+/*
+clo = yourClosure( 'Owata....' );
+document.writeln( clo.get_status()  );   // => Owata...
+*/
+
+
+

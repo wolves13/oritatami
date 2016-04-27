@@ -1,0 +1,148 @@
+﻿// occupied配列の初期設定(seed)
+OSVars.occupied[20][13] = { beadType: 0, index : 0, bondNum : 0 };
+OSVars.occupied[21][14] = { beadType: 9, index : 1, bondNum : 0 };
+OSVars.occupied[20][14] = { beadType: 9, index : 2, bondNum : 0 };
+OSVars.occupied[20][15] = { beadType: 1, index : 3, bondNum : 0 };
+
+OSVars.occupied[19][14] = { beadType: 0, index : 4, bondNum : 0 };
+OSVars.occupied[18][13] = { beadType: 0, index : 5, bondNum : 0 };
+OSVars.occupied[17][12] = { beadType: 0, index : 6, bondNum : 0 };
+OSVars.occupied[16][12] = { beadType: 0, index : 7, bondNum : 0 };
+OSVars.occupied[16][13] = { beadType: 0, index : 8, bondNum : 0 };
+OSVars.occupied[17][14] = { beadType: 9, index : 9, bondNum : 0 };
+OSVars.occupied[16][14] = { beadType: 9, index : 10, bondNum : 0 };
+OSVars.occupied[16][15] = { beadType: 1, index : 11, bondNum : 0 };
+OSVars.occupied[15][14] = { beadType: 0, index : 12, bondNum : 0 };
+OSVars.occupied[14][13] = { beadType: 0, index : 13, bondNum : 0 };
+OSVars.occupied[13][12] = { beadType: 0, index : 14, bondNum : 0 };
+OSVars.occupied[12][12] = { beadType: 0, index : 15, bondNum : 0 };
+OSVars.occupied[12][13] = { beadType: 0, index : 16, bondNum : 0 };
+
+OSVars.occupied[13][14] = { beadType: 0, index : 17, bondNum : 0 };
+OSVars.occupied[13][15] = { beadType: 0, index : 18, bondNum : 0 };
+OSVars.occupied[13][16] = { beadType: 0, index : 19, bondNum : 0 };
+
+OSVars.occupied[14][17] = { beadType: 0, index : 20, bondNum : 0 };
+OSVars.occupied[15][17] = { beadType: 0, index : 21, bondNum : 0 };
+OSVars.occupied[16][18] = { beadType: 0, index : 22, bondNum : 0 };
+
+OSVars.occupied[17][19] = { beadType: 0, index : 23, bondNum : 0 };
+OSVars.occupied[18][19] = { beadType: 0, index : 24, bondNum : 0 };
+OSVars.occupied[19][19] = { beadType: 0, index : 25, bondNum : 0 };
+
+OSVars.occupied[19][18] = { beadType: 0, index : 26, bondNum : 0 };
+OSVars.occupied[19][17] = { beadType: 0, index : 27, bondNum : 0 };
+
+OSVars.occupied[20][18] = { beadType: 0, index : 28, bondNum : 0 };
+
+OSVars.occupied[21][19] = { beadType: 0, index : 29, bondNum : 0 };
+OSVars.occupied[22][19] = { beadType: 0, index : 30, bondNum : 0 };
+OSVars.occupied[23][19] = { beadType: 0, index : 31, bondNum : 0 };
+
+OSVars.occupied[23][18] = { beadType: 0, index : 32, bondNum : 0 };
+OSVars.occupied[23][17] = { beadType: 0, index : 33, bondNum : 0 };
+
+OSVars.occupied[24][17] = { beadType: 0, index : 34, bondNum : 0 };
+OSVars.occupied[25][17] = { beadType: 0, index : 35, bondNum : 0 };
+
+OSVars.occupied[24][16] = { beadType: 1, index : 36, bondNum : 0 };
+OSVars.occupied[23][16] = { beadType: 0, index : 37, bondNum : 0 };
+OSVars.occupied[22][16] = { beadType: 0, index : 38, bondNum : 0 };
+
+OSVars.occupied[22][17] = { beadType: 0, index : 39, bondNum : 0 };
+
+OSVars.occupied[22][18] = { beadType: 2, index : 40, bondNum : 0 };
+OSVars.occupied[21][18] = { beadType: 3, index : 41, bondNum : 0 };
+OSVars.occupied[20][17] = { beadType: 4, index : 42, bondNum : 0 };
+
+OSVars.occupied[19][16] = { beadType: 0, index : 43, bondNum : 0 };
+
+OSVars.occupied[18][16] = { beadType: 0, index : 44, bondNum : 0 };
+OSVars.occupied[18][17] = { beadType: 0, index : 45, bondNum : 0 };
+
+OSVars.occupied[18][18] = { beadType: 3, index : 46, bondNum : 0 };
+OSVars.occupied[17][18] = { beadType: 4, index : 47, bondNum : 0 };
+OSVars.occupied[16][17] = { beadType: 5, index : 48, bondNum : 0 };
+
+OSVars.occupied[15][16] = { beadType: 0, index : 49, bondNum : 0 };
+OSVars.occupied[14][16] = { beadType: 0, index : 50, bondNum : 0 };
+
+
+/////////////////////////
+
+OSVars.w_path = [
+
+    {x: 20, y: 13},
+    {x: 21, y: 14},
+    {x: 20, y: 14},
+    {x: 20, y: 15}, 
+
+    {x:  19, y: 14},
+    {x:  18, y: 13},
+    {x:  17, y: 12},
+    {x:  16, y: 12},
+    {x:  16, y: 13},
+    {x:  17, y: 14},
+    {x:  16, y: 14},
+    {x:  16, y: 15},
+    {x:  15, y: 14},
+    {x:  14, y: 13},
+    {x:  13, y: 12},
+    {x:  12, y: 12},
+    {x:  12, y: 13},
+
+    {x:  13, y: 14},
+    {x:  13, y: 15},
+    {x:  13, y: 16},
+
+    {x:  14, y: 17},
+    {x:  15, y: 17},
+    {x:  16, y: 18},
+
+    {x:  17, y: 19},
+    {x:  18, y: 19},
+    {x:  19, y: 19},
+
+    {x:  19, y: 18},
+    {x:  19, y: 17},
+
+    {x: 20, y: 18},
+
+    {x: 21, y: 19},
+    {x: 22, y: 19},
+    {x: 23, y: 19},
+
+    {x: 23, y: 18},
+    {x: 23, y: 17},
+
+    {x: 24, y: 17},
+    {x: 25, y: 17},
+
+    {x: 24, y: 16},
+    {x: 23, y: 16},
+    {x: 22, y: 16},
+
+    {x: 22, y: 17},
+
+    {x: 22, y: 18},
+    {x: 21, y: 18},
+    {x: 20, y: 17},
+
+    {x:  19, y: 16},
+
+    {x:  18, y: 16},
+    {x:  18, y: 17},
+
+    {x:  18, y: 18},
+    {x:  17, y: 18},
+    {x:  16, y: 17},
+
+    {x:  15, y: 16},
+    {x:  14, y: 16}
+
+];
+
+
+
+// seedとの境目がここで決まる.
+OSVars.step = 51;

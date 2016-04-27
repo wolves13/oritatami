@@ -1,0 +1,31 @@
+
+
+
+
+
+
+
+
+
+
+
+
+var ar = [1,2,3];
+
+
+
+var f = function ( val ){
+
+    val[1] = "aiueo";
+    return;
+};
+
+
+
+
+document.writeln( ar );
+
+f( ar );
+
+document.writeln( ar );
+

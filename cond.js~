@@ -1,0 +1,6 @@
+﻿
+
+if ( {} ) {
+
+    document.writeln();
+}

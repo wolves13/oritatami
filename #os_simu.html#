@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html><head>  <title>Oritatami Simulator with Canvas</title>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<style>
+
+  body {
+    font-size   : 12pt;
+  }
+
+  #gridCanvas {
+    visibility :  hidden;
+    position   :  absolute;
+    left       :  50px ;
+    top        :  350px;
+
+    margin     :  10px;
+    cursor     :  pointer;  
+    background :  white;
+  }
+
+  #overCanvas {
+    visibility  : hidden;
+    position    : absolute;
+    left        : 50px ;
+    top         : 350px;
+
+    margin   : 10px;
+    cursor   : pointer;
+  }
+
+</style>
+</head>
+
+<body>
+  <div style="background-color : pink">OS-simulator settings</div>
+  <br>
+  <form name="forms" onsubmit="return false" >
+    <div id="firstSettingDiv" style="background-color : lightblue">
+
+      <div id="arityDiv">
+	Arity :  
+	<br><label> <input type="radio"  name="arity" value="1"/>1</label>
+	<br><label> <input type="radio"  name="arity" value="2"/>2</label>
+	<br><label> <input type="radio"  name="arity" value="3" checked="yes" />3</label>
+	<br><label> <input type="radio"  name="arity" value="4"/>4</label>
+	<br><label> <input type="radio"  name="arity" value="5"/>5(Max)</label>
+	<br>
+      </div>
+
+      <br>
+
+      <label>
+	Delay :  
+	<input type="text" name="delay" size="2" value="3" />
+      </label>
+
+      <br><br>
+
+      <label>
+	Word Length : 
+	<input type="text" name="wordLength" size="3" value="242" />
+      </label>
+      <br>
+      <label name="checkBox">
+	( 
+	Regard molecule index as bead type 
+	<input type="checkbox" name="indexEqualBeadtype" checked="checked"/> 
+	)
+      </label>
+    </div>
+
+    <br>
+
+    <div id="secondSettingDiv" class="setting2" style="visibility:hidden">
+      Number of beadTypes : 
+      <input type="text" name="beadTypes" size="3" value="400" />
+      <br><br>
+      Word : 
+      <textarea name="word" cols="50" rows="5">49,50,51,0,1,2,3,4,5,6,7,8,9,10,11</textarea>
+    </div>
+     <input type="submit" name="nextButton" value="Next" /> 
+    <div id="btnMsg"> (Bead types, Word) </div>
+  </form>
+
+  <canvas id="gridCanvas" width="900" height="800"> </canvas>
+  <canvas id="overCanvas" width="900" height="800"> </canvas>
+  <!-- 前後関係は, 後に記述した要素が前面になる  -->
+
+  <script type="text/javascript" src="basicFuncs.js"></script>  
+  <script type="text/javascript" src="canvasControl.js"></script>  
+  <script type="text/javascript" src="initial.js"></script>
+  <script type="text/javascript" src="formControl.js"></script>  
+  <script type="text/javascript" src="testFuncs.js"></script>  
+  <script type="text/javascript" src="workerTest.js"></script>
+  <noscript>JavaScriptが利用できません。</noscript>
+</body></html>

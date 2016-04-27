@@ -1,0 +1,99 @@
+﻿var init_word = function() {
+    var i;
+
+    for(i=0; i<50 ; i++){
+	OSVars.word[i] = i;  
+    }
+    // OSVars.cons.lenをここで設定したい.
+    OSVars.cons.len = OSVars.word.length;
+};
+
+
+
+
+    // テスト用ルールセット<20151125-A>
+    OSVars.ruleset[13][16]  = true; 
+    OSVars.ruleset[16][13]  = true; 
+
+    OSVars.ruleset[14][16]  = true; 
+    OSVars.ruleset[16][14]  = true; 
+
+    OSVars.ruleset[15][3]  = true; 
+    OSVars.ruleset[3][15]  = true; 
+
+    OSVars.ruleset[16][3]  = true; 
+    OSVars.ruleset[3][16]  = true; 
+
+    OSVars.ruleset[16][18]  = true; 
+    OSVars.ruleset[18][16]  = true; 
+
+    OSVars.ruleset[17][1]  = true; 
+    OSVars.ruleset[1][17]  = true; 
+
+    OSVars.ruleset[17][19]  = true; 
+    OSVars.ruleset[19][17]  = true; 
+
+    OSVars.ruleset[19][0]  = true; 
+    OSVars.ruleset[0][19]  = true; 
+
+
+
+OSVars.occupied[16][14] = { beadType: 0, index : 0, bondNum : 0 };
+OSVars.occupied[15][13] = { beadType: 1, index : 1, bondNum : 0 };
+OSVars.occupied[14][12] = { beadType: 2, index : 2, bondNum : 0 };
+
+OSVars.occupied[13][12] = { beadType: 3, index : 3, bondNum : 0 };
+OSVars.occupied[13][11] = { beadType: 4, index : 4, bondNum : 0 };
+OSVars.occupied[12][10] = { beadType: 5, index : 5, bondNum : 0 };
+OSVars.occupied[11][10] = { beadType: 6, index : 6, bondNum : 0 };
+OSVars.occupied[10][10] = { beadType: 7, index : 7, bondNum : 0 };
+OSVars.occupied[10][11] = { beadType: 8, index : 8, bondNum : 0 };
+OSVars.occupied[10][12] = { beadType: 9, index : 9, bondNum : 0 };
+OSVars.occupied[10][13] = { beadType: 10, index : 10, bondNum : 0 };
+
+OSVars.occupied[11][14] = { beadType: 11, index : 11, bondNum : 0 };
+OSVars.occupied[12][14] = { beadType: 12, index : 12, bondNum : 0 };
+OSVars.occupied[13][14] = { beadType: 13, index : 13, bondNum : 0 };
+
+
+
+// テスト用の点を追加
+// OSVars.occupied[13][10] = { beadType: 20, index : 60, bondNum : 0 };
+
+
+show_occupied_in_binary_2();
+br2();
+
+OSVars.w_path = [
+
+    {x: 16, y: 14}, 
+    {x: 15, y: 13},
+    {x: 14, y: 12},
+    {x: 13, y: 12},
+    {x: 13, y: 11},
+    {x: 12, y: 10},
+    {x: 11, y: 10},
+
+    {x: 10, y: 10},
+    {x: 10, y: 11},
+    {x: 10, y: 12},
+    {x: 10, y: 13},
+
+    {x: 11, y: 14},
+    {x: 12, y: 14},
+    {x: 13, y: 14},
+
+    /*
+    {x: 12, y: 13},
+    {x: 12, y: 12},
+    {x: 13, y: 13},
+    {x: 14, y: 13},
+    {x: 14, y: 14},
+    {x: 15, y: 14}
+    */
+
+];
+
+
+// seedとの境目がここで決まる.
+OSVars.step = 14;

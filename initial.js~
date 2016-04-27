@@ -1,0 +1,163 @@
+﻿// <initial.js>
+// Similator of 2D Oritatami System.
+// initialize OS-simulator's name space.
+//  and a bit more..
+
+//////////
+// Grobal な 値の定義
+INITIAL_GRID_SIZE_X = 64;
+INITIAL_GRID_SIZE_Y = 64;
+
+var nonDetRoutes = [];   // nondeterministic なとき, 複数のRouteを保存する用.
+var nonDetHbonds = [];   // nondeterministic なとき, 複数のHbondの組を保存する用.
+
+
+var adjacents = [ {x: 1, y: 0}, {x: -1, y: 0},
+		  {x: 0, y: 1}, {x: 0,  y: -1},
+		  {x: 1, y: 1}, {x: -1, y: -1} ];
+
+// Oritataim System が持つべき変数群を収める名前空間.
+var OSVars = {
+    cons : {
+	     alpha : 2,         // alpha, deltaはこの値を上書きする.
+             delta : 3,
+             len   : 15,        // 高分子鎖の長さ (seedも含める) .
+	     beadTypeNum : 0    // 高分子の種類.
+    },
+
+    mode : { 
+	indexEqualBeadtype : false
+    },
+
+    word   :   [ ],    // 高分子の鎖を順にならべたリスト.
+    w_path :   [ ],    // 高分子の鎖が辿った点のリスト
+
+    ruleset :  [],     // 高分子種どうしが水素結合を結べるかどうか定める. 2dMatrix.
+
+    occupied : [],     // 点の占有情報. [(高分子種,index,hbond数)/false] を２次元配列で保存.
+                       
+
+    oc_size  : { x: INITIAL_GRID_SIZE_X, 
+		 y: INITIAL_GRID_SIZE_Y },   // occupied配列の[縦/横]幅
+
+    // bond_num :   [],   // 各高分子が結んでいるhbondの数(現在未使用)
+    hbonds   :   [],   // 実際に形成されたhbondの情報 [pi,pj] (i != j) をもつ 
+
+    step :   0,         // 最適化ステップの段階.1ずつ増える.
+                       // 現在, indexいくつの高分子位置を最適化しているかを表す.
+    initialStep : 0
+};
+//
+//////////
+
+initOccupied( INITIAL_GRID_SIZE_X, INITIAL_GRID_SIZE_Y );
+
+
+// occupied配列の初期設定(seed)
+setSeed(10, 5 , { beadType: 301, index : -3, bondNum : 1 } );
+setSeed(11, 5 , { beadType: 302, index : -3, bondNum : 1 } );
+setSeed(12, 5 , { beadType: 303, index : -3, bondNum : 1 } );
+setSeed(13, 5 , { beadType: 304, index : -3, bondNum : 1 } );
+setSeed(14, 5 , { beadType: 305, index : -3, bondNum : 1 } );
+setSeed(15, 5 , { beadType: 306, index : -3, bondNum : 1 } );
+setSeed(16, 5 , { beadType: 307, index : -3, bondNum : 0 } );
+setSeed(17, 5 , { beadType: 308, index : -3, bondNum : 0 } );
+setSeed(18, 5 , { beadType: 309, index : -3, bondNum : 0 } );
+setSeed(19, 5 , { beadType: 310, index : -3, bondNum : 0 } );
+setSeed(20, 5 , { beadType: 311, index : -3, bondNum : 0 } );
+setSeed(21, 5 , { beadType: 312, index : -3, bondNum : 0 } );
+setSeed(22, 5 , { beadType: 313, index : -3, bondNum : 0 } );
+setSeed(23, 5 , { beadType: 314, index : -3, bondNum : 0 } );
+setSeed(24, 5 , { beadType: 315, index : -3, bondNum : 0 } );
+setSeed(25, 5 , { beadType: 316, index : -3, bondNum : 0 } );
+setSeed(26, 5 , { beadType: 317, index : -3, bondNum : 0 } );
+setSeed(27, 5 , { beadType: 318, index : -3, bondNum : 0 } );
+
+
+setSeed(28, 5 , { beadType: 319, index : -3, bondNum : 0 } );
+setSeed(29, 6 , { beadType: 320, index : -3, bondNum : 0 } );
+setSeed(30, 7 , { beadType: 321, index : -3, bondNum : 0 } );
+setSeed(31, 8 , { beadType: 322, index : -3, bondNum : 0 } );
+
+
+setSeed(32, 9 , { beadType: 323, index : -3, bondNum : 0 } );
+setSeed(32, 10 , { beadType: 324, index : -3, bondNum : 0 } );
+setSeed(32, 11 , { beadType: 325, index : -3, bondNum : 0 } );
+
+
+setSeed(32, 12 , { beadType: 326, index : -3, bondNum : 0 } );
+setSeed(33, 13 , { beadType: 327, index : -3, bondNum : 0 } );
+setSeed(34, 14 , { beadType: 328, index : -3, bondNum : 0 } );
+
+
+setSeed(35, 15 , { beadType: 329, index : -3, bondNum : 0 } );
+setSeed(35, 16 , { beadType: 330, index : -3, bondNum : 0 } );
+setSeed(35, 17 , { beadType: 331, index : -3, bondNum : 0 } );
+
+
+setSeed(35, 18 , { beadType: 332, index : -3, bondNum : 0 } );
+setSeed(36, 19 , { beadType: 333, index : -3, bondNum : 0 } );
+setSeed(37, 20 , { beadType: 334, index : -3, bondNum : 0 } );
+
+
+setSeed(38, 21 , { beadType: 335, index : -3, bondNum : 0 } );
+setSeed(37, 21 , { beadType: 336, index : -3, bondNum : 0 } );
+setSeed(36, 21 , { beadType: 337, index : -3, bondNum : 0 } );
+setSeed(35, 21 , { beadType: 338, index : -3, bondNum : 0 } );
+setSeed(34, 21 , { beadType: 339, index : -3, bondNum : 0 } );
+setSeed(33, 21 , { beadType: 340, index : -3, bondNum : 0 } );
+setSeed(32, 21 , { beadType: 341, index : -3, bondNum : 0 } );
+setSeed(31, 21 , { beadType: 342, index : -3, bondNum : 0 } );
+setSeed(30, 21 , { beadType: 343, index : -3, bondNum : 0 } );
+setSeed(29, 21 , { beadType: 344, index : -3, bondNum : 0 } );
+setSeed(28, 21 , { beadType: 345, index : -3, bondNum : 0 } );
+setSeed(27, 21 , { beadType: 346, index : -3, bondNum : 0 } );
+setSeed(26, 21 , { beadType: 347, index : -3, bondNum : 0 } );
+setSeed(25, 21 , { beadType: 348, index : -3, bondNum : 0 } );
+setSeed(24, 21 , { beadType: 349, index : -3, bondNum : 0 } );
+setSeed(23, 21 , { beadType: 350, index : -3, bondNum : 0 } );
+setSeed(22, 21 , { beadType: 351, index : -3, bondNum : 0 } );
+setSeed(21, 21 , { beadType: 352, index : -3, bondNum : 0 } );
+
+
+setSeed(20, 21 , { beadType: 353, index : -3, bondNum : 0 } );
+setSeed(19, 20 , { beadType: 354, index : -3, bondNum : 0 } );
+setSeed(18, 19 , { beadType: 355, index : -3, bondNum : 0 } );
+setSeed(17, 18 , { beadType: 356, index : -3, bondNum : 0 } );
+setSeed(16, 17 , { beadType: 357, index : -3, bondNum : 0 } );
+
+
+setSeed(15, 16 , { beadType: 358, index : -3, bondNum : 0 } );
+
+
+setSeed(15, 15 , { beadType: 359, index : -3, bondNum : 0 } );
+setSeed(14, 14 , { beadType: 360, index : -3, bondNum : 0 } );
+setSeed(13, 13 , { beadType: 361, index : -3, bondNum : 0 } );
+
+
+setSeed(12, 12 , { beadType: 362, index : -3, bondNum : 0 } );
+setSeed(12, 11 , { beadType: 363, index : -3, bondNum : 0 } );
+setSeed(12, 10 , { beadType: 364, index : -3, bondNum : 0 } );
+
+setSeed(12, 9 , { beadType: 365, index : -3, bondNum : 0 } );
+setSeed(11, 8 , { beadType: 366, index : -3, bondNum : 0 } );
+
+
+setSeed(10, 7 , { beadType: 367, index : -3, bondNum : 0 } );
+
+setSeed(10, 6 , { beadType: 368, index : -3, bondNum : 0 } );
+setSeed(11, 7 , { beadType: 369, index : -3, bondNum : 0 } );
+
+
+
+OSVars.w_path = [
+    {x: 11, y: 7}
+];
+
+
+
+// seedとの境目がここで決まる.
+OSVars.step = 1;
+OSVars.initialStep = 1;
+
+// len = 65??

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head>  <title>jsTest</title>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+<style>
+  
+  body {
+    font-size: 12pt;
+  }
+
+</style>
+</head>
+
+<body>
+
+  <script type="text/javascript" src="formTest.js"></script>  
+  <noscript>JavaScriptが利用できません。</noscript>
+
+  OS-simulator settings
+  <br>  <br>
+  <form name="forms" onsubmit="return false" >
+    <div id="firstSettingDiv" style="background-color : lightblue">
+
+      <div id="arityDiv">
+	Arity :  
+	<br><label> <input type="radio"  name="arity" value="1"/>1</label>
+	<br><label> <input type="radio"  name="arity" value="2"/>2</label>
+	<br><label> <input type="radio"  name="arity" value="3"/>3</label>
+	<br><label> <input type="radio"  name="arity" value="4"/>4</label>
+	<br><label> <input type="radio"  name="arity" value="5"/>5(Max)</label>
+	<br>
+      </div>
+
+      <br>
+
+      <label>
+	Delay :  
+	<input type="text" name="delay" size="2" value="3" />
+      </label>
+
+      <br><br>
+
+      <label>
+	Word Length : 
+	<input type="text" name="wordLength" size="3" value="10" />
+      </label>
+      <br>
+      <label name="checkBox">
+	( 
+	Regard molecule index as bead type 
+	<input type="checkbox" name="indexEqualBeadtype" checked="yes" disabled="true"/> 
+	)
+      </label>
+    </div>
+
+    <br><br>
+
+    <div id="secondSettingDiv" class="setting2" style="visibility:hidden">
+      Number of beadTypes : 
+      <input type="text" name="beadTypes" size="3" value="4" />
+
+      <br><br>
+      Word : 
+      <textarea name="word" cols="50" rows="5">12345</textarea>
+    </div>
+
+    <br><br>
+    <input type="submit" name="nextButton" value="Next" /> 
+    <div id="btnMsg"> (Bead types, Word) </div>
+  </form>
+
+
+</body>
+</html>
